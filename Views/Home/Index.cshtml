@@ -1,0 +1,62 @@
+﻿@model IEnumerable<kendoui.Models.Pizza>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Untitled</title>
+    <base href="https://demos.telerik.com/kendo-ui/grid/index">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.rtl.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.default.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.mobile.all.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.114/js/angular.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.114/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.114/js/kendo.all.min.js"></script>
+</head>
+<body>
+
+    <div id="grid">
+    </div>
+    <script>
+    
+        $(document).ready(function () {
+            $("#grid").kendoGrid({
+                columns: [{ title: "Name", field: "pizzaname" },
+                { title: "Id", field: "pizzaid" },
+                { title: "rate", field: "rate" },
+                ],
+                dataSource:
+                {
+                    transport: {
+                        read: "https://localhost:44313/Home/Filter"
+                    },
+                    pageSize: 5
+                },
+                schema: {
+                    model: {
+                        fields:
+                        {
+                            pizzaid: { type: "number" },
+                            pizzaname: { type: "string" },
+                            rate: { type: "number" },
+                        },
+                        
+                    }
+                },
+                height: 270,
+                scrollable: true,
+                pageable:
+                {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 1
+                },
+                sortable: true,
+                groupable: true
+            });
+        });
+    </script>
+</body>
+</html>
