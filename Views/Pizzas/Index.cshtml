@@ -1,0 +1,206 @@
+﻿@model IEnumerable<kendoui.Models.Pizza>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Untitled</title>
+    <base href="https://demos.telerik.com/kendo-ui/grid/index">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.rtl.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.default.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.1.114/styles/kendo.mobile.all.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.114/js/angular.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.114/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2020.1.114/js/kendo.all.min.js"></script>
+</head>
+<body>
+
+    <div id="grid">
+    </div>
+    @*<script>*@
+
+    @*//$(document).ready(function () {
+        //    $("#grid").kendoGrid({
+        //        columns: [{ title: "Name", field: "pizzaname" },
+        //        { title: "Id", field: "pizzaid" },
+        //        { title: "rate", field: "rate" },
+        //        ],
+        //        dataSource:
+        //        {
+        //            transport: {
+        //                read: "https://localhost:44313/Home/Filter"
+        //            },
+        //            pageSize: 5
+        //        },
+        //        schema: {
+        //            model: {
+        //                fields:
+        //                {
+        //                    pizzaid: { type: "number" },
+        //                    pizzaname: { type: "string" },
+        //                    rate: { type: "number" },
+        //                },
+
+        //            }
+        //        },
+        //        height: 270,
+        //        scrollable: true,
+        //        pageable:
+        //        {
+        //            refresh: true,
+        //            pageSizes: true,
+        //            buttonCount: 1
+        //        },
+        //        sortable: true,
+        //        groupable: true
+        //    });
+        //});
+        //$(document).ready(function () {
+        //      dataSource = new kendo.data.DataSource({
+        //      transport: {
+        //         read:
+        //         {
+        //            url: "https://localhost:44313/Pizzas/Filter",
+        //            dataType: "json",
+        //         },
+        //         destroy:
+        //         {
+        //            url: "https://localhost:44313/Pizzas/Delete",
+        //            type: "POST"
+        //         },
+        //         create:
+        //         {
+        //            url: "https://localhost:44313/Pizzas/Create",
+        //            type:"POST"
+        //         },
+        //         update:
+        //         {
+        //            url: "https://localhost:44313/Pizzas/Edit",
+        //            type: "PUT",
+        //            parameterMap: function (options, operation) {
+        //               if (operation !== "read" && options.models) {
+        //                  return {
+        //                     models: kendo.stringify(options.models)
+        //                  };
+        //               }
+        //            }
+        //         },
+        //      },
+        //      schema: {
+        //    model: {
+        //        fields:
+        //        {
+        //            pizzaid: { type: "number" },
+        //            pizzaname: { type: "string" },
+        //            rate: { type: "number" },
+        //        },
+
+        //    }
+        //     }
+        //   });
+
+        //   $("#grid1").kendoGrid({
+        //      dataSource:dataSource,
+        //      editable: "inline",
+        //      toolbar: ["create","save"],
+        //      columns: [
+        //            { title: "Name", field: "pizzaname" },
+        //            { title: "Id", field: "pizzaid"},
+        //            { title: "rate", field: "rate" },
+        //      ],
+        //      height: "500px",
+        //      pageable: {
+        //         refresh: true,
+        //         pageSizes: true,
+        //         buttonCount: 5
+        //      },
+        //   }).data("kendoGrid");
+        //});*@
+
+
+
+
+    @*// </script>*@
+
+
+    <script>
+        $(document).ready(function () {
+            var crudServiceBaseUrl = "https://localhost:44313/Pizzas",
+                dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            url:crudServiceBaseUrl + "/Filter",
+                            dataType: "json"
+                        },
+                        update: {
+                            url: crudServiceBaseUrl + "/Edit",
+                          //  dataType: "json"
+                            type: "POST"
+                        },
+                        destroy: {
+                            url: crudServiceBaseUrl + "/Delete",
+                         //   dataType: "json"
+                            type: "POST"
+                        },
+                        create: {
+                            url: crudServiceBaseUrl + "/Create",
+                       //     dataType: "json"
+                            type: "POST",
+                        },
+                        parameterMap: function (options, operation) {
+                            if (operation == "update" && options.models)
+                            {
+                                return {pizza: options.models};
+                            }
+
+                            if (operation !== "read" && operation!=="update" && options.models) {
+                                console.log(options.models[0].pizzaid);
+                                return { id: options.models[0].pizzaid };
+                            }
+                        }
+                    },
+                    batch: true,
+                    pageSize: 20,
+                    schema: {
+                        model: {
+                                id: "pizzaid",
+                                fields:
+                                {
+                                    pizzaid: { type: "number",editable: false},
+                                    pizzaname: { type: "string" },
+                                    rate: { type: "number" },
+                                }
+                             }
+                            }
+                });
+
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                pageable: true,
+                height: 550,
+                toolbar: ["create","save"],
+                columns: [
+                    { title: "Name", field: "pizzaname" },
+                    { title: "Id", field: "pizzaid"},
+                   { title: "rate", field: "rate" },
+                  { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+                editable: "inline",
+                 scrollable: true,
+                pageable:
+                {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 1
+                },
+                sortable: true
+            });
+        });
+
+
+    </script>
+
+
+</body>
+</html>
