@@ -150,9 +150,14 @@
                             type: "POST",
                         },
                         parameterMap: function (options, operation) {
-                            if (operation == "update" && options.models)
+                            if (operation == "update" || operation=="create" && options.models)
                             {
-                                return {pizza: options.models};
+                                var value = {
+                                    pizzaid: options.models[0].pizzaid,
+                                    pizzaname: options.models[0].pizzaname,
+                                    rate: options.models[0].rate
+                                }
+                                return value;
                             }
 
                             if (operation !== "read" && operation!=="update" && options.models) {
@@ -187,7 +192,7 @@
                    { title: "rate", field: "rate" },
                   { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
                 editable: "inline",
-                 scrollable: true,
+                scrollable: true,
                 pageable:
                 {
                     refresh: true,

@@ -59,7 +59,7 @@ namespace kendoui.Controllers
             {
                 db.Pizzas.Add(pizza);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(pizza);
             }
 
             return View(pizza);
@@ -85,13 +85,13 @@ namespace kendoui.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
        
-        public ActionResult Edit(Pizza pizza)
+        public ActionResult Edit([Bind(Include = "pizzaid,pizzaname,rate")] Pizza pizza)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(pizza).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(pizza);
             }
             return View(pizza);
         }
