@@ -132,22 +132,56 @@
                     transport: {
                         read: {
                             url:crudServiceBaseUrl + "/Filter",
-                            dataType: "json"
+                            dataType: "json",
                         },
-                        update: {
-                            url: crudServiceBaseUrl + "/Edit",
-                          //  dataType: "json"
-                            type: "POST"
-                        },
-                        destroy: {
-                            url: crudServiceBaseUrl + "/Delete",
-                         //   dataType: "json"
-                            type: "POST"
-                        },
-                        create: {
-                            url: crudServiceBaseUrl + "/Create",
-                       //     dataType: "json"
-                            type: "POST",
+                        //update: {
+                        //    url: crudServiceBaseUrl + "/Edit",
+                        //    dataType: "json",
+                        //    type: "POST"
+                        //},
+                        //destroy: {
+                        //    url: crudServiceBaseUrl + "/Delete",
+                        //    dataType: "json",
+                        //    type: "POST"
+                        //},
+                        //create: {
+                        //    url: crudServiceBaseUrl + "/Create",
+                        //    dataType: "json",
+                        //    type: "POST"
+                        //},
+                        read: 
+                            function(options) {
+                                       $.ajax({
+                                          url: "https://localhost:44313/Pizzas/Filter",
+                                          dataType: "json",
+                                           success: function (result) {
+                                               options.success(result);
+                                           },
+                                           error: function(result) {
+                                               options.error(result);
+                                           }
+                                      });
+                            },
+                       
+                    
+                        create: function (options) {
+                            console.log(options);
+                            var value = {
+                                pizzaid: options.data.models[0].pizzaid,
+                                pizzaname: options.data.models[0].pizzaname,
+                                rate: options.data.models[0].rate
+                            };
+                            $.ajax({
+                              url: "https://localhost:44313/Pizzas/Create",
+                              type: "POST",
+                              data:value,
+                              success: function (result) {
+                                  options.success(result);
+                            },
+                            error: function(result) {
+                              options.error(result);
+                            }
+                          });
                         },
                         parameterMap: function (options, operation) {
                             if (operation == "update" || operation=="create" && options.models)
@@ -157,11 +191,12 @@
                                     pizzaname: options.models[0].pizzaname,
                                     rate: options.models[0].rate
                                 }
+                                console.log(value);
                                 return value;
                             }
 
-                            if (operation !== "read" && operation!=="update" && options.models) {
-                                console.log(options.models[0].pizzaid);
+                            if (operation !== "read" && operation!=="update" && operation!=="create" && options.models) {
+                               // console.log(options.models[0].pizzaid);
                                 return { id: options.models[0].pizzaid };
                             }
                         }
@@ -177,7 +212,7 @@
                                     pizzaname: { type: "string" },
                                     rate: { type: "number" },
                                 }
-                             }
+                                }
                             }
                 });
 
@@ -185,13 +220,16 @@
                 dataSource: dataSource,
                 pageable: true,
                 height: 550,
-                toolbar: ["create","save"],
+                toolbar: ["create"],
                 columns: [
                     { title: "Name", field: "pizzaname" },
                     { title: "Id", field: "pizzaid"},
-                   { title: "rate", field: "rate" },
-                  { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
-                editable: "inline",
+                    { title: "rate", field: "rate" },
+                    { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+                editable: {
+                    mode: "inline",
+                    confirmation: false
+                },
                 scrollable: true,
                 pageable:
                 {

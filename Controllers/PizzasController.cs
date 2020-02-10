@@ -61,7 +61,6 @@ namespace kendoui.Controllers
                 db.SaveChanges();
                 return Json(pizza);
             }
-
             return View(pizza);
         }
 
@@ -119,7 +118,7 @@ namespace kendoui.Controllers
             Pizza pizza = db.Pizzas.Find(id);
             db.Pizzas.Remove(pizza);
             db.SaveChanges();
-            return Json(pizza, JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
