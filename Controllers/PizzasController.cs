@@ -52,9 +52,13 @@ namespace kendoui.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        
         public ActionResult Create([Bind(Include = "pizzaid,pizzaname,rate")] Pizza pizza)
         {
+            var pizzas = from m in db.Pizzas where m.pizzaname == pizza.pizzaname select m.pizzaname;
+            foreach (var vishnu in pizzas)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (ModelState.IsValid)
             {
                 db.Pizzas.Add(pizza);
@@ -118,7 +122,7 @@ namespace kendoui.Controllers
             Pizza pizza = db.Pizzas.Find(id);
             db.Pizzas.Remove(pizza);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(pizza);
         }
 
         protected override void Dispose(bool disposing)

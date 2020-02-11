@@ -165,7 +165,7 @@
                        
                     
                         create: function (options) {
-                            console.log(options);
+
                             var value = {
                                 pizzaid: options.data.models[0].pizzaid,
                                 pizzaname: options.data.models[0].pizzaname,
@@ -173,6 +173,29 @@
                             };
                             $.ajax({
                               url: "https://localhost:44313/Pizzas/Create",
+                              type: "POST",
+                              data:value,
+                                success: function (result)
+                                {
+                                    options.success(result);
+                                },
+                                error: function (result)
+                                {
+                                    alert("name already exists");
+                                    options.error(result);
+                                }
+                          });
+                        },
+
+                        update: function (options) {
+
+                            var value = {
+                                pizzaid: options.data.models[0].pizzaid,
+                                pizzaname: options.data.models[0].pizzaname,
+                                rate: options.data.models[0].rate
+                            };
+                            $.ajax({
+                              url: "https://localhost:44313/Pizzas/Edit",
                               type: "POST",
                               data:value,
                               success: function (result) {
@@ -183,23 +206,43 @@
                             }
                           });
                         },
-                        parameterMap: function (options, operation) {
-                            if (operation == "update" || operation=="create" && options.models)
-                            {
-                                var value = {
-                                    pizzaid: options.models[0].pizzaid,
-                                    pizzaname: options.models[0].pizzaname,
-                                    rate: options.models[0].rate
-                                }
-                                console.log(value);
-                                return value;
-                            }
 
-                            if (operation !== "read" && operation!=="update" && operation!=="create" && options.models) {
-                               // console.log(options.models[0].pizzaid);
-                                return { id: options.models[0].pizzaid };
-                            }
+                        destroy: function (options) {
+                           
+                            var value = {id: options.data.models[0].pizzaid};
+                            $.ajax({
+                                
+                                url: "https://localhost:44313/Pizzas/Delete",
+                                type: "POST",
+                                data: value,
+                                success: function (result)
+                                {
+                                  console.log(value);
+                                  options.success(result);
+                                },
+                                error: function (result)
+                                {
+                                  options.error(result);
+                                }
+                            });
                         }
+                        //parameterMap: function (options, operation) {
+                        //    if (operation == "update" || operation=="create" && options.models)
+                        //    {
+                        //        var value = {
+                        //            pizzaid: options.models[0].pizzaid,
+                        //            pizzaname: options.models[0].pizzaname,
+                        //            rate: options.models[0].rate
+                        //        }
+                        //        console.log(value);
+                        //        return value;
+                        //    }
+
+                        //    if (operation !== "read" && operation!=="update" && operation!=="create" && options.models) {
+                        //       // console.log(options.models[0].pizzaid);
+                        //        return { id: options.models[0].pizzaid };
+                        //    }
+                        //}
                     },
                     batch: true,
                     pageSize: 20,
