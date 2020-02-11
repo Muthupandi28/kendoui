@@ -49,13 +49,11 @@ namespace kendoui.Controllers
         }
 
         // POST: Pizzas/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public ActionResult Create([Bind(Include = "pizzaid,pizzaname,rate")] Pizza pizza)
         {
             var pizzas = from m in db.Pizzas where m.pizzaname == pizza.pizzaname select m.pizzaname;
-            foreach (var vishnu in pizzas)
+            if(pizzas.Count()>0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -67,7 +65,6 @@ namespace kendoui.Controllers
             }
             return View(pizza);
         }
-
         // GET: Pizzas/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -84,12 +81,14 @@ namespace kendoui.Controllers
         }
 
         // POST: Pizzas/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-       
+       [HttpPost]
         public ActionResult Edit([Bind(Include = "pizzaid,pizzaname,rate")] Pizza pizza)
         {
+            var pizzas = from m in db.Pizzas where m.pizzaname == pizza.pizzaname select m.pizzaname;
+            if (pizzas.Count() > 0)
+            {
+                  return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (ModelState.IsValid)
             {
                 db.Entry(pizza).State = EntityState.Modified;
@@ -116,7 +115,6 @@ namespace kendoui.Controllers
 
         // POST: Pizzas/Delete/5
         [HttpPost, ActionName("Delete")]
-       
         public ActionResult DeleteConfirmed(int id)
         {
             Pizza pizza = db.Pizzas.Find(id);
@@ -124,7 +122,6 @@ namespace kendoui.Controllers
             db.SaveChanges();
             return Json(pizza);
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -182,6 +182,11 @@
                                 error: function (result)
                                 {
                                     alert("name already exists");
+                                    //var grid = $("#grid").data("kendoGrid");
+                                    // select the first table row
+                                    //grid.select("tr:eq(1)");
+                                    //grid.clearSelection();
+                                   //options.clear();
                                     options.error(result);
                                 }
                           });
@@ -201,7 +206,8 @@
                               success: function (result) {
                                   options.success(result);
                             },
-                            error: function(result) {
+                              error: function (result) {
+                              alert("name already exists");
                               options.error(result);
                             }
                           });
@@ -217,7 +223,6 @@
                                 data: value,
                                 success: function (result)
                                 {
-                                  console.log(value);
                                   options.success(result);
                                 },
                                 error: function (result)
@@ -283,7 +288,6 @@
                 sortable: true
             });
         });
-
 
     </script>
 
